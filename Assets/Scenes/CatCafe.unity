@@ -1988,7 +1988,7 @@ PrefabInstance:
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2136,25 +2136,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba649581e7ae3f54a9892d5967eaaf4a, type: 3}
---- !u!4 &252661506 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4542944499764560, guid: bbfd91b99086b4acb9d41d225cf41bb2,
-    type: 3}
-  m_PrefabInstance: {fileID: 819717513}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &253167886 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4768747130474706, guid: 9007700338d194bd18e3086f4600a7ea,
-    type: 3}
-  m_PrefabInstance: {fileID: 1224415116}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &262621027 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4010118387548690, guid: 5090b9010d8ca4476a4f9b1315906d61,
-    type: 3}
-  m_PrefabInstance: {fileID: 349582364}
-  m_PrefabAsset: {fileID: 0}
---- !u!21 &265411575
+--- !u!21 &252648772
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -2273,6 +2255,24 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
+--- !u!4 &252661506 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4542944499764560, guid: bbfd91b99086b4acb9d41d225cf41bb2,
+    type: 3}
+  m_PrefabInstance: {fileID: 819717513}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &253167886 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4768747130474706, guid: 9007700338d194bd18e3086f4600a7ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 1224415116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &262621027 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4010118387548690, guid: 5090b9010d8ca4476a4f9b1315906d61,
+    type: 3}
+  m_PrefabInstance: {fileID: 349582364}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &270382190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4376868512803884883, guid: 6e67e2806a0743447b5a825fea70331c,
@@ -4491,13 +4491,13 @@ LineRenderer:
   - {x: 0, y: 0, z: 1}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 2
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
+        time: 0.031913757
+        value: 0.98666763
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -14110,7 +14110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playAtStart: 0
-  videoMaterial: {fileID: 265411575}
+  videoMaterial: {fileID: 252648772}
   videoClips:
   - {fileID: 32900000, guid: c675fc381244840f4900887e1b0870d7, type: 3}
 --- !u!328 &1360881426
