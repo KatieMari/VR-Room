@@ -3,83 +3,94 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class RecordPlayerController : MonoBehaviour
 {
-    public AudioSource recordAudioSource;  // Reference to the AudioSource attached to the record player
-    public GameObject vinyl;  // Reference to the vinyl object
-    public GameObject needle;  // Reference to the needle
-    public Transform vinylSlot;  // Slot where the vinyl will snap
-    public float vinylRotationSpeed = 10f;  // Speed at which the vinyl rotates
-    public float needleMoveSpeed = 2f;  // Speed at which the needle moves onto the vinyl
-
-    private bool isVinylPlaying = false;
-    private Vector3 needleOriginalPosition;  // The starting position of the needle
+    public AudioSource recordAudioSource;  // The AudioSource on the record player
+    public Transform vinylSlot;  // Where the vinyl should snap
+    public GameObject needle;  // The needle object
+    public float vinylRotationSpeed = 50f;  // Speed of vinyl rotation
+    public float needleMoveSpeed = 2f;  // Speed of the needle movement
+    private Vinyl currentVinyl;  // The currently placed vinyl
+    private Vector3 needleOriginalPosition;  // Initial position of the needle
+    private bool isPlaying = false;
 
     void Start()
     {
-        // Save the original position of the needle (before it moves)
-        needleOriginalPosition = needle.transform.position;
-
-        // Ensure no music is playing at the start
-        if (recordAudioSource != null)
-        {
-            recordAudioSource.Stop();
-        }
+        needleOriginalPosition = needle.transform.position; // Store original needle position
+        recordAudioSource.Stop(); // Ensure no music plays at start
+        Debug.Log("Record Player Controller Initialized");
     }
 
     void Update()
     {
-        if (isVinylPlaying)
+        if (isPlaying && currentVinyl != null)
         {
-            // Rotate the vinyl while the music is playing
-            vinyl.transform.Rotate(Vector3.up, vinylRotationSpeed * Time.deltaTime);
+            // Rotate the vinyl while playing
+            currentVinyl.transform.Rotate(Vector3.up, vinylRotationSpeed * Time.deltaTime);
+            Debug.Log("Vinyl is rotating");
 
-            // Move the needle only along the Y-axis (keeping X and Z fixed)
-            Vector3 targetPosition = new Vector3(needleOriginalPosition.x, vinylSlot.position.y, needleOriginalPosition.z);
+            // Move the needle onto the vinyl
+            Vector3 targetPosition = new Vector3(needleOriginalPosition.x, needleOriginalPosition.y, vinylSlot.position.z);
             needle.transform.position = Vector3.MoveTowards(needle.transform.position, targetPosition, needleMoveSpeed * Time.deltaTime);
+            Debug.Log("Needle is moving towards vinyl");
         }
     }
 
-    // Called when a vinyl is placed in the socket
-  public void OnVinylPlaced(Vinyl placedVinyl)
-{
-    // Log to verify if the AudioSource has an AudioClip assigned
-    if (recordAudioSource.clip == null)
+    // The method that is called when the vinyl is placed
+    public void OnVinylPlaced(Vinyl placedVinyl)
     {
-        Debug.LogWarning("AudioSource does not have an AudioClip assigned!");
+        if (placedVinyl == null)
+        {
+            Debug.LogError("No vinyl was placed on the player!");
+            return; // Avoid null errors
+        }
+
+        // If there's already a vinyl on the player, remove it first
+        if (currentVinyl != null)
+        {
+            OnVinylRemoved(); // Call the removal function to stop the current vinyl's music
+        }
+
+        Debug.Log("Vinyl placed on record player");
+
+        // Assign the placed vinyl
+        currentVinyl = placedVinyl;
+        currentVinyl.transform.position = vinylSlot.position;
+        currentVinyl.transform.rotation = vinylSlot.rotation;
+        currentVinyl.gameObject.SetActive(true); // Make sure the vinyl is active when placed
+        Debug.Log("Vinyl position and rotation set");
+
+        // Assign and play the correct song
+        if (recordAudioSource != null && currentVinyl.vinylSong != null)
+        {
+            recordAudioSource.clip = currentVinyl.vinylSong;
+            recordAudioSource.Play();
+            Debug.Log("Audio clip assigned and playing");
+            isPlaying = true;
+        }
+        else
+        {
+            Debug.LogError("AudioSource or Vinyl Song is missing!");
+        }
     }
-    else
-    {
-        Debug.Log("AudioSource has an AudioClip assigned: " + recordAudioSource.clip.name);
-    }
 
-    if (recordAudioSource != null && placedVinyl != null)
-    {
-        Debug.Log("Vinyl placed, playing song: " + placedVinyl.vinylSong.name);
-        recordAudioSource.clip = placedVinyl.vinylSong;  // Set the vinyl's specific song
-        recordAudioSource.Play();  // Play the song
-    }
-    isVinylPlaying = true;
-
-    needle.transform.position = new Vector3(needle.transform.position.x, vinylSlot.position.y, needle.transform.position.z); // Set initial position
-}
-
-
+    // The method to remove the vinyl from the player
     public void OnVinylRemoved()
     {
-        // Stop the music when the vinyl is removed
-        if (recordAudioSource != null)
+        if (recordAudioSource.isPlaying)
         {
             recordAudioSource.Stop();
+            Debug.Log("Music stopped");
         }
-        isVinylPlaying = false;
+        isPlaying = false;
 
-        // Reset the needle to its original position
+        // Reset the needle
         needle.transform.position = needleOriginalPosition;
-    }
+        Debug.Log("Needle reset to original position");
 
-    // Test method: Call this manually to test if the song plays
-    void TestPlaceVinyl()
-    {
-        Vinyl placedVinyl = vinyl.GetComponent<Vinyl>();  // Get the Vinyl script attached to the vinyl object
-        OnVinylPlaced(placedVinyl);  // Call the OnVinylPlaced method
+        // Optionally reset the vinyl's position or deactivate it here if needed
+        if (currentVinyl != null)
+        {
+            currentVinyl.gameObject.SetActive(false); // Deactivate vinyl when removed
+            currentVinyl = null; // Clear reference to the current vinyl
+        }
     }
 }
