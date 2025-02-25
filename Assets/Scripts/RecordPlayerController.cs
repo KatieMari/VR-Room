@@ -13,61 +13,55 @@ public class RecordPlayerController : MonoBehaviour
     }
 
     // Call this when vinyl is placed
-  public void PlaceVinyl(GameObject vinyl)
-{
-    if (!vinylPlaced)
+    public void PlaceVinyl(GameObject vinyl)
     {
-        VinylData vinylData = vinyl.GetComponent<VinylData>();
-        if (vinylData != null)
+        if (!vinylPlaced)
         {
-            audioSource.clip = vinylData.song; // Get song from VinylData component
+            VinylData vinylData = vinyl.GetComponent<VinylData>();
+            if (vinylData != null)
+            {
+                audioSource.clip = vinylData.song; // Get song from VinylData component
+            }
+
+            vinyl.transform.SetParent(vinylSocket);
+            vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
+            currentVinyl = vinyl;
+            audioSource.Play();
+
+            // Enable rotation using RotateObject script
+            RotateObject rotateScript = vinyl.GetComponent<RotateObject>();
+            if (rotateScript != null)
+            {
+                rotateScript.SetIsRotating(true);
+                Debug.Log("SetIsRotating(true) called on: " + vinyl.name);
+
+            }
+
+            vinylPlaced = true;
+            Debug.Log("Vinyl placed and spinning.");
         }
-
-        vinyl.transform.SetParent(vinylSocket);
-        vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
-        currentVinyl = vinyl;
-        audioSource.Play();
-
-        // Trigger StartSpinning when the vinyl is placed
-        Animator animator = vinyl.GetComponent<Animator>();
-        if (animator != null)
-        {
-            animator.SetTrigger("StartSpinning"); 
-            Debug.Log("StartSpinning trigger set.");// Ensure this is being called
-        }
-
-        vinylPlaced = true;
-        Debug.Log("Vinyl placed and song playing");
     }
-}
-
-
-
 
     // Call this when vinyl is removed
-  public void RemoveVinyl()
-{
-    if (vinylPlaced && currentVinyl != null)
+    public void RemoveVinyl()
     {
-        // Trigger StopSpinning when the vinyl is removed
-        Animator vinylAnimator = currentVinyl.GetComponent<Animator>();
-        if (vinylAnimator != null)
+        if (vinylPlaced && currentVinyl != null)
         {
-            vinylAnimator.SetTrigger("StopSpinning");
+            // Stop rotation using RotateObject script
+            RotateObject rotateScript = currentVinyl.GetComponent<RotateObject>();
+            if (rotateScript != null)
+            {
+                rotateScript.SetIsRotating(false);
+            }
+
+            audioSource.Stop(); // Stop the music
+
+            // Reset Parent so it can be grabbed again
+            currentVinyl.transform.SetParent(null);
+            currentVinyl = null;
+            vinylPlaced = false; // Allow new vinyl to be placed
+
+            Debug.Log("Vinyl removed and stopped spinning.");
         }
-
-        audioSource.Stop(); // Stop the music
-
-        // Reset Parent so it can be grabbed again
-        currentVinyl.transform.SetParent(null);
-        currentVinyl = null;
-        vinylPlaced = false; // Allow new vinyl to be placed
-
-        Debug.Log("Vinyl removed and song stopped.");
     }
-}
-
-
-
-
 }
