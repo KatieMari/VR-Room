@@ -13,18 +13,21 @@ public class RecordPlayerController : MonoBehaviour
     }
 
     // Call this when vinyl is placed
-  public void PlaceVinyl(GameObject vinyl)
+    public void PlaceVinyl(GameObject vinyl)
 {
     if (!vinylPlaced)
     {
         VinylData vinylData = vinyl.GetComponent<VinylData>();
         if (vinylData != null)
         {
-            audioSource.clip = vinylData.song; 
+            audioSource.clip = vinylData.song;
         }
 
+        // Set position & rotation
         vinyl.transform.SetParent(vinylSocket);
         vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
+        vinyl.transform.localRotation = Quaternion.identity; 
+
         currentVinyl = vinyl;
         audioSource.Play();
 
@@ -32,7 +35,7 @@ public class RecordPlayerController : MonoBehaviour
         if (rotateScript != null)
         {
             rotateScript.SetIsRotating(true);
-            Debug.Log("SetIsRotating(true) called on: " + vinyl.name);
+            rotateScript.enabled = true;
         }
         else
         {
@@ -46,24 +49,24 @@ public class RecordPlayerController : MonoBehaviour
 
     // Call this when vinyl is removed
     public void RemoveVinyl()
+{
+    if (vinylPlaced && currentVinyl != null)
     {
-        if (vinylPlaced && currentVinyl != null)
+        RotateObject rotateScript = currentVinyl.GetComponent<RotateObject>();
+        if (rotateScript != null)
         {
-            // Stop rotation using RotateObject script
-            RotateObject rotateScript = currentVinyl.GetComponent<RotateObject>();
-            if (rotateScript != null)
-            {
-                rotateScript.SetIsRotating(false);
-            }
-
-            audioSource.Stop(); // Stop the music
-
-            // Reset Parent so it can be grabbed again
-            currentVinyl.transform.SetParent(null);
-            currentVinyl = null;
-            vinylPlaced = false; // Allow new vinyl to be placed
-
-            Debug.Log("Vinyl removed and stopped spinning.");
+            rotateScript.SetIsRotating(false);
+            rotateScript.enabled = false;
         }
+
+        audioSource.Stop();
+
+        currentVinyl.transform.SetParent(null);
+        currentVinyl = null;
+        vinylPlaced = false;
+
+        Debug.Log("Vinyl removed and song stopped.");
     }
+}
+
 }

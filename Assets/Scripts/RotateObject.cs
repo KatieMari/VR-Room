@@ -15,46 +15,30 @@ public class RotateObject : MonoBehaviour
 
     public void SetIsRotating(bool value)
     {
-        if (value)
-        {
-            Begin();
-        }
-        else
-        {
-            End();
-        }
-    }
-
-    public void Begin()
-    {
-        isRotating = true;
-    }
-
-    public void End()
-    {
-        isRotating = false;
-    }
-
-    public void ToggleRotate()
-    {
-        isRotating = !isRotating;
-    }
-
-
-    public void SetSpeed(float value)
-    {
-        sensitivity = Mathf.Clamp(value, 0, 1);
-        isRotating = (sensitivity * speed) != 0.0f;
+        Debug.Log("SetIsRotating called with: " + value + " on " + gameObject.name);
+        isRotating = value;
     }
 
     private void Update()
     {
-
-        Rotate();
+        if (isRotating)
+        {
+            Debug.Log("Update Running: " + gameObject.name);
+            Rotate();
+        }
     }
 
-    private void Rotate()
-    {
-        transform.Rotate(transform.up, (sensitivity * speed) * Time.deltaTime);
-    }
+ private void Rotate()
+{
+    Vector3 currentRotation = transform.eulerAngles; // Get current global rotation
+
+    Debug.Log("Rotating: " + gameObject.name + " - Rotation before: " + currentRotation);
+
+    // ✅ Force rotation only on the Y-axis, keeping X/Z unchanged
+    transform.rotation = Quaternion.Euler(0, currentRotation.y + ((sensitivity * speed) * Time.deltaTime), 0);
+
+    Debug.Log("Rotating: " + gameObject.name + " - Rotation after: " + transform.eulerAngles);
+}
+
+
 }
