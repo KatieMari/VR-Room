@@ -13,34 +13,36 @@ public class RecordPlayerController : MonoBehaviour
     }
 
     // Call this when vinyl is placed
-    public void PlaceVinyl(GameObject vinyl)
+  public void PlaceVinyl(GameObject vinyl)
+{
+    if (!vinylPlaced)
     {
-        if (!vinylPlaced)
+        VinylData vinylData = vinyl.GetComponent<VinylData>();
+        if (vinylData != null)
         {
-            VinylData vinylData = vinyl.GetComponent<VinylData>();
-            if (vinylData != null)
-            {
-                audioSource.clip = vinylData.song; // Get song from VinylData component
-            }
-
-            vinyl.transform.SetParent(vinylSocket);
-            vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
-            currentVinyl = vinyl;
-            audioSource.Play();
-
-            // Enable rotation using RotateObject script
-            RotateObject rotateScript = vinyl.GetComponent<RotateObject>();
-            if (rotateScript != null)
-            {
-                rotateScript.SetIsRotating(true);
-                Debug.Log("SetIsRotating(true) called on: " + vinyl.name);
-
-            }
-
-            vinylPlaced = true;
-            Debug.Log("Vinyl placed and spinning.");
+            audioSource.clip = vinylData.song; 
         }
+
+        vinyl.transform.SetParent(vinylSocket);
+        vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
+        currentVinyl = vinyl;
+        audioSource.Play();
+
+        RotateObject rotateScript = vinyl.GetComponent<RotateObject>();
+        if (rotateScript != null)
+        {
+            rotateScript.SetIsRotating(true);
+            Debug.Log("SetIsRotating(true) called on: " + vinyl.name);
+        }
+        else
+        {
+            Debug.LogWarning("RotateObject script not found on: " + vinyl.name);
+        }
+
+        vinylPlaced = true;
     }
+}
+
 
     // Call this when vinyl is removed
     public void RemoveVinyl()
