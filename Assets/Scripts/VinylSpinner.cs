@@ -8,7 +8,7 @@ void Update()
 {
     if (isSpinning)
     {
-        transform.Rotate(0, 1, 0);  // Should rotate without Time.deltaTime
+        transform.Rotate(0, 1, 0);  
     }
 }
 

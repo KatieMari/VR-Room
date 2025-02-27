@@ -30,11 +30,11 @@ public class RotateObject : MonoBehaviour
 
  private void Rotate()
 {
-    Vector3 currentRotation = transform.eulerAngles; // Get current global rotation
+    Vector3 currentRotation = transform.eulerAngles; 
 
     Debug.Log("Rotating: " + gameObject.name + " - Rotation before: " + currentRotation);
 
-    // ✅ Force rotation only on the Y-axis, keeping X/Z unchanged
+  
     transform.rotation = Quaternion.Euler(0, currentRotation.y + ((sensitivity * speed) * Time.deltaTime), 0);
 
     Debug.Log("Rotating: " + gameObject.name + " - Rotation after: " + transform.eulerAngles);
