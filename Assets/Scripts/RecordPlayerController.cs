@@ -9,7 +9,7 @@ public class RecordPlayerController : MonoBehaviour
 
     void Start()
     {
-        audioSource.loop = false; // The song shouldn't loop
+       
     }
 
     // Call this when vinyl is placed
@@ -26,8 +26,7 @@ public class RecordPlayerController : MonoBehaviour
         // Set position & rotation
         vinyl.transform.SetParent(vinylSocket);
         vinyl.transform.localPosition = new Vector3(0, 0.1f, 0);
-        vinyl.transform.localRotation = Quaternion.identity; 
-
+    
         currentVinyl = vinyl;
         audioSource.Play();
 
