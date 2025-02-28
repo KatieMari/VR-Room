@@ -7,11 +7,6 @@ public class RecordPlayerController : MonoBehaviour
     public GameObject currentVinyl; // The vinyl currently on the player
     private bool vinylPlaced = false; // Check if a vinyl is already placed
 
-    void Start()
-    {
-       
-    }
-
     // Call this when vinyl is placed
     public void PlaceVinyl(GameObject vinyl)
 {

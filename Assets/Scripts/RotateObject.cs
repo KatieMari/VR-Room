@@ -13,19 +13,18 @@ public class RotateObject : MonoBehaviour
     [Tooltip("The max speed of the rotation")]
     public float speed = 10.0f;
     private bool isRotating = false;
+    public GameObject vinyl;
 
-    
-
+    public void Start()
+    {
+        vinyl = this.gameObject.transform.GetChild(0).gameObject;
+    }
 
     public void SetIsRotating(bool value)
-    
     {
-        
         Debug.Log("SetIsRotating called with: " + value + " on " + gameObject.name);
         isRotating = value;
     }
-
-
 
     private void Update()
     {
@@ -36,19 +35,12 @@ public class RotateObject : MonoBehaviour
         }
     }
 
-
-
- private void Rotate()
-{
-    Vector3 currentRotation = transform.eulerAngles; 
-
-    Debug.Log("Rotating: " + gameObject.name + " - Rotation before: " + currentRotation);
-
-  
-    transform.rotation = Quaternion.Euler(0, currentRotation.y + ((sensitivity * speed) * Time.deltaTime), 0);
-
-    Debug.Log("Rotating: " + gameObject.name + " - Rotation after: " + transform.eulerAngles);
-}
-
+    private void Rotate()
+    {
+        Vector3 currentRotation = transform.eulerAngles;
+        Debug.Log("Rotating: " + gameObject.name + " - Rotation before: " + currentRotation);
+        vinyl.transform.Rotate(0.0f, ((sensitivity * speed) * Time.deltaTime), 0.0f, Space.Self);
+        Debug.Log("Rotating: " + gameObject.name + " - Rotation after: " + transform.eulerAngles);
+    }
 
 }

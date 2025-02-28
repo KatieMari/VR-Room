@@ -30,9 +30,9 @@ public class RecordPlayerLogic : MonoBehaviour
 
         Transform attachedObjectTransform = interactable.transform;
 
-        GameObject record = attachedObjectTransform.gameObject;
+        GameObject vinyl = attachedObjectTransform.gameObject;
 
-        RotateObject rotateObject = record.GetComponent<RotateObject>();
+        RotateObject rotateObject = vinyl.GetComponent<RotateObject>();
 
         if (rotateObject != null)
 
