@@ -1,47 +1,28 @@
 using UnityEngine;
-
-using UnityEngine.XR.Interaction.Toolkit.Interactables;
-
-using UnityEngine.XR.Interaction.Toolkit.Interactors;
-
-
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class RecordPlayerLogic : MonoBehaviour
-
 {
+    public UnityEngine.XR.Interaction.Toolkit.Interactors.XRSocketInteractor socket;                // Assign this in the inspector
+    public RecordPlayerController recordPlayer;      // Assign this too
 
-    XRSocketInteractor socket;
-
-    IXRSelectInteractor interactor;
-
-    void Start()
-
+    void OnEnable()
     {
-
-        interactor = GetComponent<IXRSelectInteractor>();
-
+        // Subscribe to the event when something is inserted into the socket
+        socket.selectEntered.AddListener(OnVinylPlaced);
     }
 
-    public void SocketCheck()
-
+    void OnDisable()
     {
-
-        IXRSelectInteractable interactable = interactor.firstInteractableSelected;
-
-        Transform attachedObjectTransform = interactable.transform;
-
-        GameObject vinyl = attachedObjectTransform.gameObject;
-
-        RotateObject rotateObject = vinyl.GetComponent<RotateObject>();
-
-        if (rotateObject != null)
-
-        {
-
-            rotateObject.SetIsRotating(true);
-
-        }
-
+        // Unsubscribe to avoid memory leaks or errors
+        socket.selectEntered.RemoveListener(OnVinylPlaced);
     }
 
+    private void OnVinylPlaced(SelectEnterEventArgs args)
+    {
+        GameObject vinyl = args.interactableObject.transform.gameObject;
+
+        // Call the method to handle playing the vinyl
+        recordPlayer.PlaceVinyl(vinyl);
+    }
 }

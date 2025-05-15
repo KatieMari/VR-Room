@@ -12,7 +12,7 @@ public class RecordPlayerController : MonoBehaviour
 {
     if (!vinylPlaced)
     {
-        VinylData vinylData = vinyl.GetComponent<VinylData>();
+        Vinyl vinylData = vinyl.GetComponent<Vinyl>();
         if (vinylData != null)
         {
             audioSource.clip = vinylData.song;
